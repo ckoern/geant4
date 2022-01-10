@@ -50,7 +50,8 @@ DicomPhantomParameterisationColour::DicomPhantomParameterisationColour(
 : G4PhantomParameterisation()
 {
     ReadColourData(colourFile);
-    SetSkipEqualMaterials(false);
+    // use the skip equal materials branch!
+    SetSkipEqualMaterials(true);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

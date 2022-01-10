@@ -849,12 +849,17 @@ void DicomDetectorConstruction::ConstructPhantomContainer()
   fVoxelHalfDimX = fZSliceHeaderMerged->GetVoxelHalfX();
   fVoxelHalfDimY = fZSliceHeaderMerged->GetVoxelHalfY();
   fVoxelHalfDimZ = fZSliceHeaderMerged->GetVoxelHalfZ();
+
+  // scale the voxels to 0.1mm
+  fVoxelHalfDimX *= 0.1;
+  fVoxelHalfDimY *= 0.1;
+  fVoxelHalfDimZ *= 0.1;  
 #ifdef G4VERBOSE
-  G4cout << " fNoVoxelsX " << fNoVoxelsX << " fVoxelHalfDimX " << fVoxelHalfDimX 
+  G4cout << " fNoVoxelsX " << fNoVoxelsX << " fVoxelHalfDimX[mm] " << fVoxelHalfDimX /CLHEP::mm
          <<G4endl;
-  G4cout << " fNoVoxelsY " << fNoVoxelsY << " fVoxelHalfDimY " << fVoxelHalfDimY 
+  G4cout << " fNoVoxelsY " << fNoVoxelsY << " fVoxelHalfDimY[mm] " << fVoxelHalfDimY /CLHEP::mm
          <<G4endl;
-  G4cout << " fNoVoxelsZ " << fNoVoxelsZ << " fVoxelHalfDimZ " << fVoxelHalfDimZ 
+  G4cout << " fNoVoxelsZ " << fNoVoxelsZ << " fVoxelHalfDimZ[mm] " << fVoxelHalfDimZ /CLHEP::mm
          <<G4endl;
   G4cout << " totalPixels " << fNoVoxelsX*fNoVoxelsY*fNoVoxelsZ <<  G4endl;
 #endif
@@ -880,8 +885,11 @@ void DicomDetectorConstruction::ConstructPhantomContainer()
 #ifdef G4VERBOSE
   G4cout << " placing voxel container volume at " << posCentreVoxels << G4endl;
 #endif
+
+  G4RotationMatrix* rot = new G4RotationMatrix();
+  rot->rotateY(90*CLHEP::deg);
   fContainer_phys =
-    new G4PVPlacement(0,  // rotation
+    new G4PVPlacement(rot,  // rotation
                       posCentreVoxels,
                       fContainer_logic,     // The logic volume
                       "phantomContainer",  // Name
